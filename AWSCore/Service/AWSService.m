@@ -58,6 +58,13 @@
     });
 }
 
+- (void)setCustomEndPoint:(NSString *)customEndPoint {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        _customEndPoint = customEndPoint;
+    });
+}
+
 - (id)serviceForKey:(id)key {
     return [self.dictionary objectForKey:key];
 }
@@ -296,6 +303,11 @@ NSString *const AWSServiceNameMobileAnalytics = @"mobileanalytics";
             _URL = [NSURL URLWithString:[NSString stringWithFormat:@"%@://sdb.amazonaws.com", HTTP_Type]];
         } else {
             _URL = [NSURL URLWithString:[NSString stringWithFormat:@"%@://%@%@%@.amazonaws.com", HTTP_Type, _serviceName, separator, _regionName]];
+        }
+        
+        if(_serviceType == AWSServiceMobileAnalytics && [AWSServiceManager defaultServiceManager].customEndPoint ){
+            _URL = [NSURL URLWithString:[AWSServiceManager defaultServiceManager].customEndPoint];
+            
         }
 
         //need to add ".cn" at end of URL if it is in China Region

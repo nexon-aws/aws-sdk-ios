@@ -42,6 +42,8 @@
  The default service configuration object. This property can be set only once, and any subsequent setters are ignored.
  */
 @property (nonatomic, strong) AWSServiceConfiguration *defaultServiceConfiguration;
+@property (nonatomic, strong) NSString *customEndPoint;
+
 
 /**
  Returns a default singleton object. You should use this singleton method instead of creating an instance of the service manager.

@@ -19,6 +19,8 @@
 #import <GZIP/GZIP.h>
 #import "AWSMobileAnalyticsSerializable.h"
 #import "AWSMobileAnalyticsSerializerFactory.h"
+#import "AWSService.h"
+
 
 static NSString* const ENDPOINT_PATH = @"%@/events";
 
@@ -65,8 +67,32 @@ static NSString* const CONTENT_ENCODING_KEY = @"Content-Encoding";
 
 - (id<AWSMobileAnalyticsRequest>)buildWithObjects:(NSArray *)theObjects
 {
-    NSString* endpoint = [self.configuration stringForKey:AWSKeyEventRecorderHost withOptValue:AWSValueEventRecorderHost];
-    NSString* appEndpoint = [NSString stringWithFormat:ENDPOINT_PATH, endpoint];
+    NSString* tempEndPoint = nil;
+    NSString* appEndpoint = nil;
+    NSLog(@"test3 %@",[AWSServiceManager defaultServiceManager].customEndPoint);
+    
+    if (![AWSServiceManager defaultServiceManager].customEndPoint) {
+        tempEndPoint = AWSValueEventRecorderHost ;
+    } else {
+        tempEndPoint =[AWSServiceManager defaultServiceManager].customEndPoint;
+    }
+    
+    
+    NSLog(@"test2 %@",tempEndPoint);
+    NSString* endpoint = [self.configuration stringForKey:AWSKeyEventRecorderHost withOptValue:tempEndPoint];
+    
+    
+    if (![AWSServiceManager defaultServiceManager].customEndPoint) {
+        appEndpoint = [NSString stringWithFormat:ENDPOINT_PATH, endpoint];
+    } else {
+        appEndpoint =endpoint;
+    }
+    
+    //  NSString* appEndpoint = [NSString stringWithFormat:ENDPOINT_PATH, endpoint];
+    
+    
+    
+    NSLog(@"aaaa %@",appEndpoint);
     
     id<AWSMobileAnalyticsRequest> request = [self.httpClient freshRequest];
     [request setUrl:[NSURL URLWithString:appEndpoint]];
